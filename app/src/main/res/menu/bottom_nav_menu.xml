@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_check_schedule"
+        android:icon="@drawable/baseline_train_24"
+        android:title="Check Schedule" />
+
+    <item
+        android:id="@+id/nav_mtr_map"
+        android:icon="@drawable/baseline_map_24"
+        android:title="MTR Route Map" />
+</menu>
