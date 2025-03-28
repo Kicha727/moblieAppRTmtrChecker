@@ -9,19 +9,19 @@
         android:id="@+id/lineInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Line (e.g., TKL)"/>
+        android:hint="@string/enter_line"/>
 
     <EditText
         android:id="@+id/stationInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Station (e.g., TKO)"/>
+        android:hint="@string/enter_station"/>
 
     <Button
         android:id="@+id/fetchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Train Schedule"/>
+        android:text="@string/get_schedule"/>
 
     <TextView
         android:id="@+id/trainSchedule"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">港鐵資訊</string>
+    <string name="settings">設定</string>
+    <string name="enable_dark_mode">啟用深色模式</string>
+    <string name="use_traditional_chinese">使用繁體中文</string>
+    <string name="check_schedule">查詢時間表</string>
+    <string name="mtr_map">港鐵路線圖</string>
+    <string name="settings_title">設定</string>
+    <string name="enter_line">請輸入線路(e.g TKL)</string>
+    <string name="enter_station">請輸入站台(e.g TKO)</string>
+    <string name="get_schedule">確定</string>
+</resources>
