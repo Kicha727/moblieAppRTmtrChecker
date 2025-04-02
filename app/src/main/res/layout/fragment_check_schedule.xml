@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/lineInput"
+    <Spinner
+        android:id="@+id/mtrLineSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:id="@+id/mtrStationSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_line"/>
-
-    <EditText
-        android:id="@+id/stationInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_station"/>
-
-    <Button
-        android:id="@+id/fetchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/get_schedule"/>
+        android:layout_marginTop="8dp"/>
 
     <TextView
-        android:id="@+id/trainSchedule"
+        android:id="@+id/trainScheduleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:paddingTop="20dp"/>
+        android:layout_marginTop="16dp"
+        android:text="列車時刻表將顯示於此"
+        android:textSize="16sp" />
+
 </LinearLayout>
