@@ -1,5 +1,7 @@
 package com.example.mtrchecker;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ public class CheckScheduleFragment extends Fragment {
 
     // 线路名称对照表
     private final String[] lineNames = {"東涌線", "荃灣線", "港島線"};
+
     private final String[] lineCodes = {"TCL", "TWL", "ISL"}; // API 代碼
 
     // 站點名称对照表
@@ -47,12 +50,29 @@ public class CheckScheduleFragment extends Fragment {
             {"CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK","KWF","KWH","TWH","TSW"}, // 荃灣線
             {"KET", "HKU", "SHW", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "TAU", "SWH", "SKW", "HFC", "CWB"}  // 港島線
     };
+    private final String[] lineNamesEn = {"Tung Chung Line", "Tsuen Wan Line", "Island Line"};
+
+    // 站點名稱（英文）
+    private final String[][] stationNamesEn = {
+            {"Hong Kong", "Kowloon", "Olympic", "Nam Cheong", "Tsing Yi", "Sunny Bay", "Tung Chung"}, // 東涌線
+            {"Central", "Admiralty", "Tsim Sha Tsui", "Jordan", "Yau Ma Tei", "Mong Kok", "Prince Edward",
+                    "Sham Shui Po", "Cheung Sha Wan", "Lai Chi Kok", "Mei Foo", "Lai King", "Kwai Fong",
+                    "Kwai Hing", "Tai Wo Hau", "Tsuen Wan"}, // 荃灣線
+            {"Kennedy Town", "HKU", "Sai Ying Pun", "Sheung Wan", "Central", "Admiralty", "Wan Chai",
+                    "Causeway Bay", "Tin Hau", "Fortress Hill", "North Point", "Quarry Bay", "Tai Koo",
+                    "Sai Wan Ho", "Shau Kei Wan", "Heng Fa Chuen", "Chai Wan"}  // 港島線
+    };
+
+    // 記錄當前語言，默認中文
+    private boolean isEnglish = false;
 
     private final Map<String, String> stationMap = new HashMap<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        SharedPreferences prefs = requireContext().getSharedPreferences("settings_prefs", Context.MODE_PRIVATE);
+        boolean isEnglish = prefs.getString("lang", "zh-HK").equals("en"); // 讀取語言設定
         View view = inflater.inflate(R.layout.fragment_check_schedule, container, false);
 
         mtrLineSpinner = view.findViewById(R.id.mtrLineSpinner);
@@ -61,14 +81,13 @@ public class CheckScheduleFragment extends Fragment {
 
         mtrApiService = new MTRApiService(requireContext());
 
-        // 構建站名對應關係
         for (int i = 0; i < lineNames.length; i++) {
             for (int j = 0; j < stationNames[i].length; j++) {
                 stationMap.put(stationNames[i][j], stationCodes[i][j]);
             }
         }
-
-        lineAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, lineNames);
+        String[] lines = isEnglish ? lineNamesEn : lineNames;
+        lineAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, lines);
         mtrLineSpinner.setAdapter(lineAdapter);
 
         mtrLineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -99,9 +118,14 @@ public class CheckScheduleFragment extends Fragment {
     }
 
     private void updateStationSpinner(int lineIndex) {
-        stationAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, stationNames[lineIndex]);
+        SharedPreferences prefs = requireContext().getSharedPreferences("settings_prefs", Context.MODE_PRIVATE);
+        boolean isEnglish = prefs.getString("lang", "zh-HK").equals("en"); // 讀取語言設定
+
+        String[] stations = isEnglish ? stationNamesEn[lineIndex] : stationNames[lineIndex]; // 選擇適當語言
+        stationAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, stations);
         mtrStationSpinner.setAdapter(stationAdapter);
-        selectedStation = stationMap.get(stationNames[lineIndex][0]); // 選擇第一個站點
+
+        selectedStation = stationMap.get(stationNames[lineIndex][0]); // API 仍使用站點代碼
         fetchSchedule();
     }
 
