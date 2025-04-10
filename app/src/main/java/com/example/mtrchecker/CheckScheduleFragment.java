@@ -72,7 +72,7 @@ public class CheckScheduleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         SharedPreferences prefs = requireContext().getSharedPreferences("settings_prefs", Context.MODE_PRIVATE);
-        boolean isEnglish = prefs.getString("lang", "zh-HK").equals("en"); // 讀取語言設定
+        isEnglish = prefs.getString("lang", "zh-HK").equals("en"); // 正確：使用 class 的成員變數
         View view = inflater.inflate(R.layout.fragment_check_schedule, container, false);
 
         mtrLineSpinner = view.findViewById(R.id.mtrLineSpinner);
@@ -134,30 +134,52 @@ public class CheckScheduleFragment extends Fragment {
             @Override
             public void onSuccess(JSONArray upTrains, JSONArray downTrains) {
                 try {
-                    StringBuilder scheduleText = new StringBuilder("🚆 **列車時刻表**\n\n");
+                    StringBuilder scheduleText = new StringBuilder();
 
-                    scheduleText.append("🔼 **往上行方向**\n");
-                    for (int i = 0; i < upTrains.length(); i++) {
-                        JSONObject train = upTrains.getJSONObject(i);
-                        scheduleText.append(train.getString("time")).append(" - ").append(train.getString("dest")).append("\n");
-                    }
+                    if (isEnglish) {
+                        scheduleText.append("🚆 **Train Schedule**\n\n");
+                        scheduleText.append("🔼 **Up Direction**\n");
+                        for (int i = 0; i < upTrains.length(); i++) {
+                            JSONObject train = upTrains.getJSONObject(i);
+                            scheduleText.append(train.getString("time"))
+                                    .append(" - ").append(train.getString("dest")).append("\n");
+                        }
 
-                    scheduleText.append("\n🔽 **往下行方向**\n");
-                    for (int i = 0; i < downTrains.length(); i++) {
-                        JSONObject train = downTrains.getJSONObject(i);
-                        scheduleText.append(train.getString("time")).append(" - ").append(train.getString("dest")).append("\n");
+                        scheduleText.append("\n🔽 **Down Direction**\n");
+                        for (int i = 0; i < downTrains.length(); i++) {
+                            JSONObject train = downTrains.getJSONObject(i);
+                            scheduleText.append(train.getString("time"))
+                                    .append(" - ").append(train.getString("dest")).append("\n");
+                        }
+                    } else {
+                        scheduleText.append("🚆 **列車時刻表**\n\n");
+                        scheduleText.append("🔼 **往上行方向**\n");
+                        for (int i = 0; i < upTrains.length(); i++) {
+                            JSONObject train = upTrains.getJSONObject(i);
+                            scheduleText.append(train.getString("time"))
+                                    .append(" - ").append(train.getString("dest")).append("\n");
+                        }
+
+                        scheduleText.append("\n🔽 **往下行方向**\n");
+                        for (int i = 0; i < downTrains.length(); i++) {
+                            JSONObject train = downTrains.getJSONObject(i);
+                            scheduleText.append(train.getString("time"))
+                                    .append(" - ").append(train.getString("dest")).append("\n");
+                        }
                     }
 
                     trainScheduleText.setText(scheduleText.toString());
+
                 } catch (JSONException e) {
-                    trainScheduleText.setText("數據解析錯誤！");
+                    trainScheduleText.setText(isEnglish ? "Data parsing error!" : "數據解析錯誤！");
                     Log.e("CheckScheduleFragment", "Parsing error: " + e.getMessage());
                 }
             }
 
             @Override
             public void onError(String errorMessage) {
-                trainScheduleText.setText("❌ 無法獲取數據：" + errorMessage);
+                trainScheduleText.setText(isEnglish ? "❌ Failed to retrieve data: " + errorMessage
+                        : "❌ 無法獲取數據：" + errorMessage);
             }
         });
     }
